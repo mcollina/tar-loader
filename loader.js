@@ -30,6 +30,9 @@ async function buildIndex () {
   const extractStream = extract()
 
   toStream.pipe(extractStream)
+  toStream.on('error', (err) => {
+    extractStream.destroy(err)
+  })
 
   for await (const entry of extractStream) {
     if (entry.header.type === 'file') {
